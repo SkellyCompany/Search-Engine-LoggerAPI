@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace LoggerAPI.Controllers
+namespace SearchEngine.LoggerAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]

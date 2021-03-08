@@ -1,6 +1,6 @@
 using System;
 
-namespace LoggerAPI
+namespace SearchEngine.LoggerAPI
 {
     public class WeatherForecast
     {

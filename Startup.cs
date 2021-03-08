@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-namespace LoggerAPI
+namespace SearchEngine.LoggerAPI
 {
     public class Startup
     {
@@ -30,7 +30,7 @@ namespace LoggerAPI
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "LoggerAPI", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "SearchEngine - LoggerAPI", Version = "v1" });
             });
         }
 
@@ -41,7 +41,7 @@ namespace LoggerAPI
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LoggerAPI v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SearchEngine - LoggerAPI v1"));
             }
 
             app.UseHttpsRedirection();
