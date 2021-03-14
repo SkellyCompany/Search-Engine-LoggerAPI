@@ -1,16 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using SearchEngine.LoggerAPI.Core.ApplicationServices;
+using SearchEngine.LoggerAPI.Core.ApplicationServices.Services;
+using SearchEngine.LoggerAPI.Core.DomainServices;
+using SearchEngine.LoggerAPI.Infrastructure;
+using SearchEngine.LoggerAPI.Infrastructure.Client;
+using SearchEngine.LoggerAPI.Infrastructure.Client.Database;
 
 namespace SearchEngine.LoggerAPI
 {
@@ -26,8 +27,23 @@ namespace SearchEngine.LoggerAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<DatabaseSettings>(Configuration.GetSection(nameof(DatabaseSettings)));
+            services.Configure<DatabaseMetadata>(Configuration.GetSection(nameof(DatabaseMetadata)));
 
-            services.AddControllers();
+            services.AddSingleton<IDatabaseSettings, DatabaseSettings>(sp =>
+                sp.GetRequiredService<IOptions<DatabaseSettings>>().Value);
+            services.AddSingleton<IDatabaseMetadata, DatabaseMetadata>(sp =>
+                sp.GetRequiredService<IOptions<DatabaseMetadata>>().Value);
+
+            services.AddScoped<ILogService, LogService>();
+            services.AddScoped<ILogRepository, LogRepository>();
+            services.AddScoped<IClient, Client>();
+
+            services.AddControllers().AddJsonOptions(opts =>
+            {
+                opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SearchEngine - LoggerAPI", Version = "v1" });
